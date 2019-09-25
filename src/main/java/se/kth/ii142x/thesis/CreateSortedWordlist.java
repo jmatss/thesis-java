@@ -10,17 +10,17 @@ import se.kth.ii142x.thesis.model.Block;
 
 public class CreateSortedWordlist {
 	private static final Logger LOGGER = Logger.getLogger(CreateSortedWordlist.class.getName());
-	public static final int HASH_SIZE = 16;			// 16 bytes (= 128 bits per md5 hash)
+	public static final int HASH_SIZE = 16;  // 16 bytes (= 128 bits per md5 hash)
 
 	public static void main (String[] args)
 	throws NoSuchAlgorithmException, InterruptedException, IOException, ExecutionException {
-		long start = 0L;				// The last 8 hex chars of the raspberry pi serial number,
-		long end = 0xffffffL;			// will loop all possible serial numbers from "start" through "end"
+		long start = 0L;        // The last 8 hex chars of the raspberry pi serial number,
+		long end = 0xffffffL;   // will loop all possible serial numbers from "start" through "end"
 
 		String filename = "list";
 		int amountOfThreads = 8;
-		int bufferSize = Integer.MAX_VALUE;	// ~Max amount of bytes in buffers at the same time
-		int printAmount = (int)1e7;			// Print status every "printAmount" merge iteration
+		int bufferSize = Integer.MAX_VALUE;  // ~Max amount of bytes in buffers at the same time
+		int printAmount = (int)1e7;          // Print status every "printAmount" merge iteration
 
 		// floor to multiple of HASH_SIZE
 		bufferSize -= bufferSize % HASH_SIZE;
