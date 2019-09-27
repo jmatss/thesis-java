@@ -23,7 +23,7 @@ class MergeBlocks {
 	private final int printAmount;
 
 	MergeBlocks(List<Block> blocks, int amountOfThreads, int bufferSize, String filename, int printAmount)
-			throws IOException {
+	throws IOException {
 		this.blocks = blocks;
 		this.amountOfThreads = amountOfThreads;
 		this.filename = filename;
@@ -37,10 +37,9 @@ class MergeBlocks {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	void merge() throws IOException, InterruptedException
 	{
-		BlockingQueue<byte[]> minResult = new ArrayBlockingQueue(QUEUE_SIZE);
+		BlockingQueue<byte[]> minResult = new ArrayBlockingQueue<>(QUEUE_SIZE);
 		MergeHandler mergeHandler = new MergeHandler(this.blocks, minResult, this.amountOfThreads, QUEUE_SIZE);
 		new Thread(mergeHandler).start();
 
