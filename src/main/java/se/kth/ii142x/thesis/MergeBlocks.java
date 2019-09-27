@@ -48,8 +48,8 @@ class MergeBlocks {
 		byte[] minBlock;
 
 		try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(this.filename))) {
-			// Remove smallest item from the blocks found by comparisonHandler
-			// and write result to out. getMin() returns byte[].length != 16 when
+			// Remove smallest item from the blocks found by mergeHandler and
+			// write result to out. minResult.take() returns byte[].length != 16 when
 			// all hashes have been merged (BlockingQueue doesn't allow null).
 			while (true) {
 				minBlock = minResult.take();
