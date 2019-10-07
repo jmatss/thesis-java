@@ -14,8 +14,8 @@ public class CreateSortedWordlist {
 
 	public static void main (String[] args)
 	throws NoSuchAlgorithmException, InterruptedException, IOException, ExecutionException {
-		long start = 0L;        // The last 8 hex chars of the raspberry pi serial number,
-		long end = 0xffffffL;   // will loop all possible serial numbers from "start" through "end"
+		long start = 0L;         // The last 8 hex chars of the raspberry pi serial number,
+		long end = 0xffffffffL;  // will loop all possible serial numbers from "start" through "end"
 
 		String filename = "list";
 		int amountOfThreads = 8;
