@@ -22,14 +22,27 @@ public class Block {
 	private ByteBuffer buffer;  // store as bytes to speed up disk IO
 	private ReverseFileReader reader;
 
-	public Block(long start, long end, int blockId,
-				 int amountOfThreads, String filename) {
+	public Block(long start, long end, int blockId, int amountOfThreads, String filename) {
+		if (start < 0 || end < 0) {
+			throw new IllegalArgumentException("arguments start and end not allowed to be less than zero: " +
+				"given start: " + start + ", given end: " + end);
+		}
 		this.start = start;
 		this.end = end;
-		this.amountOfHashes = (int)(end - start + 1);
-		this.amountOfThreads = amountOfThreads;
-		this.filename = filename + blockId;
 
+		this.amountOfHashes = (int)(end - start + 1);
+		if (this.amountOfHashes <= 0) {
+			throw new IllegalArgumentException("amount of hashes is less than or equal zero: " +
+				this.amountOfHashes);
+		}
+
+		if (amountOfThreads <= 0) {
+			throw new IllegalArgumentException("amount of threads is less than or equal zero: " +
+				amountOfThreads);
+		}
+		this.amountOfThreads = amountOfThreads;
+
+		this.filename = filename + blockId;
 		this.buffer = ByteBuffer.allocate(this.amountOfHashes * CreateSortedWordlist.HASH_SIZE);
 	}
 
