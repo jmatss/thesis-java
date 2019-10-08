@@ -31,7 +31,7 @@ public class ComparisonDTO implements Comparable {
 	}
 
 	// Counts null as greater than (shouldn't matter)
-	private int compare(byte[] left, byte[] right) {
+	public static int compare(byte[] left, byte[] right) {
 		if (right == null)  // will be true if both are null
 			return -1;
 		else if (left == null)
