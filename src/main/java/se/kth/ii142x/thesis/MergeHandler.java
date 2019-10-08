@@ -144,7 +144,7 @@ class MergeHandler implements Runnable {
 
 		private final List<Block> blocks;
 		private final BlockingQueue<ComparisonDTO> pending;
-		private final PriorityQueue<ComparisonDTO> priorityQueue;
+		private final Queue<ComparisonDTO> priorityQueue;
 
 		private MergeHandlerThread(int threadId, int start, int end,
 								   List<Block> blocks, BlockingQueue<ComparisonDTO> pending) {
