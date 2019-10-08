@@ -23,6 +23,13 @@ class CreateBlocks {
 		this.end = end;
 		this.amountOfThreads = amountOfThreads;
 		this.filename = filename;
+
+		bufferSize -= bufferSize % CreateSortedWordlist.HASH_SIZE;
+		if (bufferSize <= 0) {
+			throw new IllegalArgumentException(String.format("bufferSize <= 0: (%d < 0)" +
+				", might have wrapped around Integer.MAX_VALUE. bufferSize is " +
+				"limited by ByteBuffers limit of Integer.MAX_VALUE.\n", bufferSize));
+		}
 		this.hashesPerBlock = bufferSize / CreateSortedWordlist.HASH_SIZE;
 	}
 

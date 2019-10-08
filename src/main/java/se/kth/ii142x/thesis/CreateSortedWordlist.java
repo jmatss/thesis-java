@@ -22,16 +22,6 @@ public class CreateSortedWordlist {
 		int bufferSize = Integer.MAX_VALUE;  // ~Max amount of bytes in buffers at the same time
 		int printAmount = (int)1e7;          // Print status every "printAmount" merge iteration
 
-		// floor to multiple of HASH_SIZE
-		bufferSize -= bufferSize % HASH_SIZE;
-
-		if (bufferSize <= 0) {
-			System.err.printf("bufferSize <= 0: (%d < 0)" +
-					", might have wrapped around Integer.MAX_VALUE. bufferSize is " +
-					"limited by ByteBuffers limit of Integer.MAX_VALUE.\n", bufferSize);
-			System.exit(0);
-		}
-
 		/*
 			STEP 1
 			Create blocks. Every block will contain (bufferSize / HASH_SIZE) hashes.
