@@ -24,6 +24,7 @@ class CreateBlocks {
 		this.amountOfThreads = amountOfThreads;
 		this.filename = filename;
 
+		// floor to multiple of HASH_SIZE
 		bufferSize -= bufferSize % CreateSortedWordlist.HASH_SIZE;
 		if (bufferSize <= 0) {
 			throw new IllegalArgumentException(String.format("bufferSize <= 0: (%d < 0)" +
