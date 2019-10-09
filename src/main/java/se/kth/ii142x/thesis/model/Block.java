@@ -156,7 +156,11 @@ public class Block {
 		}
 
 		private String padZeros(String hexString) {
-			return "0".repeat(CreateSortedWordlist.HASH_SIZE - hexString.length()) + hexString;
+			StringBuilder sb = new StringBuilder();
+                        for (int i = 0; i < CreateSortedWordlist.HASH_SIZE - hexString.length(); i++) {
+                            sb.append("0");   
+                        }
+                        return sb.toString() + hexString;
 		}
 	}
 }
