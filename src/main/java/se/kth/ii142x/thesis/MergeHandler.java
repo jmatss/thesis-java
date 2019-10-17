@@ -29,6 +29,7 @@ class MergeHandler implements Runnable {
 
 	/*
 		Contains comparisons done by the subthreads that is to be processed by this handler.
+		One BlockingQueue in the array corresponds to one thread.
 	 */
 	private final BlockingQueue<ComparisonDTO>[] pending;
 
@@ -51,10 +52,10 @@ class MergeHandler implements Runnable {
 		this.pending = new ArrayBlockingQueue[amountOfThreads];
 		this.priorityQueue = new PriorityQueue<>(amountOfThreads);
 
-		init(amountOfThreads, queueSize);
+		initThreads(amountOfThreads, queueSize);
 	}
 
-	private void init(int amountOfThreads, int queueSize) {
+	private void initThreads(int amountOfThreads, int queueSize) {
 		// If less blocks than threads, limit amount of threads
 		if (this.blocks.size() < amountOfThreads) {
 			amountOfThreads = this.blocks.size();
@@ -64,7 +65,7 @@ class MergeHandler implements Runnable {
 		int threadRange = this.blocks.size() / amountOfThreads;
 		int currentStart, currentEnd;
 
-		// Create threads that does comparisons
+		// Create the threads that does comparisons over a range of blocks.
 		for(int i = 0; i < amountOfThreads; i++) {
 			// every thread has its own buffer that it writes its comparison results to
 			this.pending[i] = new ArrayBlockingQueue<>(queueSize / amountOfThreads);
@@ -91,7 +92,7 @@ class MergeHandler implements Runnable {
 				thread.start();
 			}
 
-			// populate the priority queue with minimums from threads
+			// populate the priority queue with "ultimate" minimum from every thread
 			for (int threadId = 0; threadId < this.threads.size(); threadId++) {
 				this.priorityQueue.add(this.pending[threadId].take());
 			}
@@ -99,7 +100,6 @@ class MergeHandler implements Runnable {
 			ComparisonDTO current, next;
 
 			while(true) {
-				// if true: queue empty, done
 				if (this.priorityQueue.isEmpty())
 					break;
 
@@ -107,7 +107,7 @@ class MergeHandler implements Runnable {
 				current = this.priorityQueue.poll();
 				next = this.pending[current.getId()].take();
 
-				// if next == null: this thread is done, dont add next to priority queue
+				// if next == null: this thread is done and all its hashes have been processed/sorted
 				if (next.getHash() != null)
 					this.priorityQueue.add(next);
 
@@ -121,7 +121,6 @@ class MergeHandler implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
 
 		for (Thread thread : this.threads) {
 			try {
@@ -162,7 +161,7 @@ class MergeHandler implements Runnable {
 		@Override
 		public void run() {
 			try {
-				// init PQ with mins from all blocks
+				// populate the priority queue with "ultimate" minimum from every block
 				for (int i = this.start; i <= this.end; i++) {
 					this.priorityQueue.add(
 							new ComparisonDTO(i, this.blocks.get(i).pop())
