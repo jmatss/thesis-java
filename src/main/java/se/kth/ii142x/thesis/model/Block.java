@@ -69,7 +69,8 @@ public class Block {
 			}
 
 			Callable<Boolean> generateHashesThread = new GenerateHashesThread(
-					currentStart, currentEnd, this.buffer, this.start);
+					currentStart, currentEnd, this.buffer, this.start
+			);
 			Future<Boolean> future = executor.submit(generateHashesThread);
 			futureList.add(future);
 		}
@@ -139,7 +140,7 @@ public class Block {
 			byte[] currentHash;
 
 			while (currentNumber <= this.end) {
-				currentNumberString = padZeros(Long.toHexString(currentNumber)) + "\n";
+				currentNumberString = serialNumberFormat(Long.toHexString(currentNumber));
 				currentHash = this.md.digest(currentNumberString.getBytes(ENCODING));
 
 				// Using put() with index makes it threadsafe
@@ -155,8 +156,17 @@ public class Block {
 			return true;
 		}
 
-		private String padZeros(String hexString) {
-			return "0".repeat(CreateSortedWordlist.HASH_SIZE - hexString.length()) + hexString;
+		/**
+		 * Format the given hexstring to a raspberry pi serial number (00000000xxxxxxxx\n)
+		 * with an appended line break (added by the "echo" command used when creating the hash).
+		 * Pad with zeros to get 16 chars and add a line break (\n) at the end.
+		 */
+		private String serialNumberFormat(String hexString) {
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < CreateSortedWordlist.HASH_SIZE - hexString.length(); i++) {
+				sb.append("0");
+			}
+			return sb.toString() + hexString + "\n";
 		}
 	}
 }
