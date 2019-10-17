@@ -10,20 +10,25 @@ import se.kth.ii142x.thesis.DTO.ComparisonDTO;
 import se.kth.ii142x.thesis.model.Block;
 
 public class CreateSortedWordlistTest {
-	private static final String filename = "testlist";
+	private static final String FILENAME = "testlist";
 
+	/**
+	 * Helper function to run the tests.
+	 * It will do the exact same thing that is done in the main method
+	 * (create the blocks and then merge them).
+	 */
 	private File createHashes(TestCase t) throws Exception {
 		CreateBlocks createBlocks = new CreateBlocks(
-			t.start, t.end, t.amountOfThreads, t.bufferSize, this.filename
+			t.start, t.end, t.amountOfThreads, t.bufferSize, FILENAME
 		);
 		List<Block> blocks = createBlocks.create();
 
 		MergeBlocks mergeBlocks = new MergeBlocks(
-				blocks, t.amountOfThreads, t.bufferSize, this.filename, Integer.MAX_VALUE
+				blocks, t.amountOfThreads, t.bufferSize, FILENAME, Integer.MAX_VALUE
 		);
 		mergeBlocks.merge();
 
-		File f = new File(this.filename);
+		File f = new File(FILENAME);
 		if (!f.exists()) {
 			fail(String.format("file wasn't created with inputs:" +
 					" start=%d, end=%d & amountOfThreads=%d", t.start, t.end, t.amountOfThreads));
@@ -51,13 +56,14 @@ public class CreateSortedWordlistTest {
 	}
 
 	@Test
-	public void testCreateHashesWithExceptions() {
+	public void testIncorrectInputThrowsExceptions() {
 		TestCase[] testCases = {
 			new TestCase(-1, 0, 1, Integer.MAX_VALUE),
 			new TestCase(16, 0, 1, 0xff),
 			new TestCase(16, 16, -1, 0xff),
 			new TestCase(0, 16, -1, Integer.MAX_VALUE),
 			new TestCase(0, 16, 1, -1),
+			new TestCase(0, 16, 1, Integer.MAX_VALUE + 1),
 		};
 
 		File f = null;
@@ -77,7 +83,7 @@ public class CreateSortedWordlistTest {
 	}
 
 	@Test
-	public void testHashesSorted() {
+	public void testHashesCreateCorrectlyAndSorted() {
 		TestCase[] testCases = {
 			new TestCase(0, 0, 1, 16),
 			new TestCase(0, 0, 2, Integer.MAX_VALUE),
@@ -105,7 +111,7 @@ public class CreateSortedWordlistTest {
 			byte[] prev = new byte[CreateSortedWordlist.HASH_SIZE];
 			byte[] current = new byte[CreateSortedWordlist.HASH_SIZE];
 
-			try(FileInputStream fis = new FileInputStream(this.filename)) {
+			try(FileInputStream fis = new FileInputStream(FILENAME)) {
 				fis.read(prev);
 
 				while(true) {
