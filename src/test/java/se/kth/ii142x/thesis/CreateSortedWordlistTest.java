@@ -69,8 +69,9 @@ public class CreateSortedWordlistTest {
 			} catch (Exception e) {
 				// success
 			} finally {
-				if (f != null)
+				if (f != null) {
 					f.delete();
+				}
 			}
 		}
 	}
@@ -123,8 +124,9 @@ public class CreateSortedWordlistTest {
 			} catch (Exception e) {
 				fail(e);
 			} finally {
-				if (f != null)
+				if (f != null) {
 					f.delete();
+				}
 			}
 		}
 	}
