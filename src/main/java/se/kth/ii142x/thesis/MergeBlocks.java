@@ -48,11 +48,11 @@ class MergeBlocks {
 
 		try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(this.filename))) {
 			// Remove smallest item from the blocks found by mergeHandler and
-			// write result to out. minResult.take() returns byte[].length != 16 when
+			// write result to out. minResult.take() returns byte[].length != HASH_SIZE when
 			// all hashes have been merged (BlockingQueue doesn't allow null).
 			while (true) {
 				minBlock = minResult.take();
-				if (minBlock.length != 16) {
+				if (minBlock.length != CreateSortedWordlist.HASH_SIZE) {
 					break;
 				}
 				out.write(minBlock);

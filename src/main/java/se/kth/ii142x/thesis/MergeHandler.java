@@ -114,7 +114,7 @@ class MergeHandler implements Runnable {
 				this.minResult.put(current.getHash());
 			}
 
-			// Done executing, BlockingQueue doesn't allow null, so use byte[].length != 16 as indicator
+			// Done executing, BlockingQueue doesn't allow null, so use byte[].length != HASH_SIZE as indicator
 			// for the main thread that everything is finished.
 			this.minResult.put(new byte[]{0});
 
